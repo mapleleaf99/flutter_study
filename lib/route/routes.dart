@@ -1,0 +1,53 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_demo/pages/home/home_page.dart';
+import 'package:flutter_demo/pages/web_view_page.dart';
+
+///路由管理类
+class Routes {
+  static Route<dynamic> generateRoute(RouteSettings settings) {
+
+    switch (settings.name) {
+      case RoutePath.home:
+          return pageRoute(HomePage(), settings: settings);
+      case RoutePath.webViewPage:
+        return pageRoute(WebViewPage(title: "首页跳转来的"), settings: settings);
+    }
+
+    return pageRoute(
+      Scaffold(
+        body: SafeArea(
+          child: Center(
+            child: Text("路由：${settings.name} 不存在"),
+          ),
+        ),
+      )
+    );
+  }
+
+  static MaterialPageRoute pageRoute(Widget page, {RouteSettings? settings,
+        bool? fullScreenDialog,
+        bool? maintainState,
+        bool? allowSnapshotting,
+        bool? barrierDismissible}) {
+    return MaterialPageRoute(builder: (context) {
+      return page;
+    },
+      settings: settings,
+      fullscreenDialog: fullScreenDialog ?? false,
+      allowSnapshotting: allowSnapshotting ?? true,
+      maintainState: maintainState ?? true,
+      barrierDismissible: barrierDismissible ?? false,
+    );
+  }
+}
+
+//路由地址
+class RoutePath {
+
+  //首页
+  static const String home = "/";
+
+  //webView
+  static const String webViewPage = "/webViewPage";
+
+}
