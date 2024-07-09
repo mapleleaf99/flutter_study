@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class WebViewPage extends StatefulWidget {
-  String? title;
-  WebViewPage({super.key, required this.title});
+  final String? title;
+  final String? url;
+
+  WebViewPage({super.key, required this.title, this.url});
 
   @override
   State<WebViewPage> createState() => _WebViewPageState();

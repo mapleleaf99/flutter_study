@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_demo/http/dio_instance.dart';
-import 'package:flutter_demo/pages/home/home_page.dart';
 import 'package:flutter_demo/route/route_untils.dart';
 import 'package:flutter_demo/route/routes.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -27,7 +26,7 @@ class MyApp extends StatelessWidget {
           ),
           navigatorKey: RouteUntils.navigatorKey,
           onGenerateRoute: Routes.generateRoute,
-          initialRoute: RoutePath.home,
+          initialRoute: RoutePath.tab,
         );
       },
     ));

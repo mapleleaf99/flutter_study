@@ -1,14 +1,13 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_demo/datas/home_banner_data.dart';
-import 'package:flutter_demo/datas/home_list_data.dart';
+import 'package:flutter_demo/common_ui/smart_refresh/smart_refresh_widget.dart';
+import 'package:flutter_demo/repository/datas/home_list_data.dart';
 import 'package:flutter_demo/pages/home/home_vm.dart';
-import 'package:flutter_demo/pages/web_view_page.dart';
 import 'package:flutter_demo/route/route_untils.dart';
 import 'package:flutter_demo/route/routes.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_swiper_view/flutter_swiper_view.dart';
 import 'package:provider/provider.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -20,12 +19,24 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   HomeViewModel viewModel = HomeViewModel();
 
+  RefreshController refreshController = RefreshController();
+
   @override
   void initState() {
     super.initState();
 
     viewModel.getBanner();
-    viewModel.getHomeList();
+    viewModel.initHomeListData(false);
+  }
+
+  void refreshOrLoad(bool loadMore) {
+    viewModel.initHomeListData(loadMore, callback: (loadMore) {
+      if (loadMore) {
+        refreshController.loadComplete();
+      } else {
+        refreshController.refreshCompleted();
+      }
+    });
   }
 
   @override
@@ -35,13 +46,26 @@ class _HomePageState extends State<HomePage> {
     },
     child: Scaffold(
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              _banner(),
-              _homeListView(),
-            ],
+        child: SmartRefreshWidget(
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                _banner(),
+                _homeListView(),
+              ],
+            ),
           ),
+          controller: refreshController,
+          onLoading: () {
+            //上拉加载回调
+            refreshOrLoad(true);
+          },
+          onRefresh: () {
+            //下拉加载回调
+            viewModel.getBanner().then((value) {
+              refreshOrLoad(false);
+            });
+          },
         ),
       ),
     ),
@@ -102,7 +126,7 @@ class _HomePageState extends State<HomePage> {
                 Padding(padding: EdgeInsets.only(right: 5.w),
                   child: Text(item?.niceShareDate ?? "", style: TextStyle(color: Colors.black, fontSize: 12.sp),),
                 ),
-                Text("置顶", style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),),
+                (item?.type?.toInt() == 1) ? Text("置顶", style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),) : SizedBox()
               ],
             ),
             SizedBox(height: 5.h,),
@@ -137,7 +161,7 @@ class _HomePageState extends State<HomePage> {
           itemBuilder: (context, index) {
             return Container(
               height: 150.h,
-              child: Image.network(vm.bannerList?[index].imagePath ?? "", fit: BoxFit.fill,),
+              child: Image.network(vm.bannerList?[index]?.imagePath ?? "", fit: BoxFit.fill,),
             );
           },
         ),
