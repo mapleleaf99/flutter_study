@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_demo/pages/auth/login_page.dart';
+import 'package:flutter_demo/route/route_untils.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class PersonalPage extends StatefulWidget {
@@ -16,7 +18,9 @@ class _PersonalPageState extends State<PersonalPage> {
       body: SafeArea(
         child: Column(
           children: [
-            _header(),
+            _header(() {
+              RouteUntils.push(context, LoginPage());
+            }),
             _settingsItem("我的收藏", () {}),
             _settingsItem("检查更新", () {}),
             _settingsItem("关于我们", () {}),
@@ -49,7 +53,7 @@ class _PersonalPageState extends State<PersonalPage> {
     );
   }
 
-  Widget _header() {
+  Widget _header(GestureTapCallback? onTap) {
     return Container(
       alignment: Alignment.center,
       color: Colors.teal,
@@ -58,12 +62,18 @@ class _PersonalPageState extends State<PersonalPage> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          ClipRRect(
-            child: Image.asset("assets/images/logo.png", width: 70.r, height: 70.r,),
-            borderRadius: BorderRadius.circular(35.r),
+          GestureDetector(
+            onTap: onTap,
+            child: ClipRRect(
+              child: Image.asset("assets/images/logo.png", width: 70.r, height: 70.r,),
+              borderRadius: BorderRadius.circular(35.r),
+            ),
           ),
           SizedBox(height: 6,),
-          Text("未登录", style: TextStyle(color: Colors.white, fontSize: 13.sp),)
+          GestureDetector(
+              onTap: onTap,
+              child: Text("未登录", style: TextStyle(color: Colors.white, fontSize: 13.sp),)
+          )
         ],
       ),
     );

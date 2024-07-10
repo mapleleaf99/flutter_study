@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_demo/pages/auth/login_page.dart';
+import 'package:flutter_demo/pages/auth/register_page.dart';
 import 'package:flutter_demo/pages/home/home_page.dart';
 import 'package:flutter_demo/pages/tab_page.dart';
 import 'package:flutter_demo/pages/web_view_page.dart';
@@ -12,6 +14,10 @@ class Routes {
           return pageRoute(TabPage(), settings: settings);
       case RoutePath.webViewPage:
         return pageRoute(WebViewPage(title: "首页跳转来的"), settings: settings);
+      case RoutePath.loginPage:
+        return pageRoute(LoginPage(), settings: settings);
+      case RoutePath.resgisterPage:
+        return pageRoute(RegisterPage(), settings: settings);
     }
 
     return pageRoute(
@@ -51,4 +57,8 @@ class RoutePath {
   //webView
   static const String webViewPage = "/webViewPage";
 
+  //登录
+  static const String loginPage = "/loginPage";
+  //注册
+  static const String resgisterPage = "/resgisterPage";
 }

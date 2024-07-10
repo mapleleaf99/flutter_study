@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter_demo/repository/datas/auth_data.dart';
 import 'package:flutter_demo/repository/datas/common_website_data.dart';
 import 'package:flutter_demo/repository/datas/search_hot_key_data.dart';
 import '../http/dio_instance.dart';
@@ -49,5 +50,24 @@ class Api {
     SearchHotKeyListData listData = SearchHotKeyListData.fromJson(response.data);
 
     return listData.keyList;
+  }
+
+  ///注册
+  Future<dynamic> register({String? name, String? password, String? rePassord}) async {
+    Response response = await DioInstance.instance().post(path: "user/register", params: {
+      "username": name,
+      "password": password,
+      "repassword": rePassord,
+    });
+    return response.data;
+  }
+
+  ///登录
+  Future<AuthData> login({String? name, String? password}) async {
+    Response response = await DioInstance.instance().post(path: "user/login", params: {
+      "username": name,
+      "password": password,
+    });
+    return AuthData.fromJson(response.data);
   }
 }
