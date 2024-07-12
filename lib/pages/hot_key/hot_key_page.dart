@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_demo/pages/hot_key/hot_key_vm.dart';
-import 'package:flutter_demo/pages/web_view_page.dart';
+import 'package:flutter_demo/pages/hot_key/search/search_page.dart';
 import 'package:flutter_demo/route/route_untils.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
+import '../../common_ui/web/webview_page.dart';
+import '../../common_ui/web/webview_widget.dart';
 import '../../repository/datas/common_website_data.dart';
 import '../../repository/datas/search_hot_key_data.dart';
 
@@ -14,6 +16,9 @@ class HotKeyPage extends StatefulWidget {
   @override
   State<HotKeyPage> createState() => _HotKeyPageState();
 }
+
+///常用网站回调
+typedef WebsiteClick = Function(String name, String link);
 
 class _HotKeyPageState extends State<HotKeyPage> {
   HotKeyViewModel viewModel = HotKeyViewModel();
@@ -49,15 +54,22 @@ class _HotKeyPageState extends State<HotKeyPage> {
                     children: [
                       Text("搜索热词", style: TextStyle(fontSize: 14, color: Colors.black),),
                       Expanded(child: SizedBox()),
-                      Image.asset("assets/images/icon_search.png", width: 30.r, height: 30.r,)
+                      GestureDetector(
+                        onTap: () {
+                          //进入搜索页面
+                          RouteUntils.push(context, SearchPage());
+                        },
+                          child: Image.asset("assets/images/icon_search.png", width: 30.r, height: 30.r,)
+                      )
                     ],
                   ),
                 ),
                 
-                //搜索热词
+                //搜索热词列表
                 Consumer<HotKeyViewModel>(builder: (context,vm, child) {
                   return _gridView(false, keyList: vm.keyList, itemTap: (value) {
-
+                    //进入搜索页面
+                    RouteUntils.push(context, SearchPage(keyword: value,));
                   });
                 }),
 
@@ -76,10 +88,14 @@ class _HotKeyPageState extends State<HotKeyPage> {
                   child: Text("常用网站", style: TextStyle(fontSize: 14, color: Colors.black),),
                 ),
 
-                //搜索热词
                 Consumer<HotKeyViewModel>(builder: (context,vm, child) {
-                  return _gridView(true, websiteList: vm.websiteList, itemTap: (value) {
-                    RouteUntils.push(context, WebViewPage(title: "常用网站", url: value,));
+                  return _gridView(true, websiteList: vm.websiteList, websiteClick: (name, link) {
+                    ///跳转网页
+                    RouteUntils.push(context, WebViewPage(
+                      loadResource: link,
+                      webViewType: WebViewType.URL,
+                      showTitle: true,
+                      title: name,));
                   });
                 }),
               ],
@@ -94,7 +110,8 @@ class _HotKeyPageState extends State<HotKeyPage> {
   Widget _gridView(bool? isWebsite, {
     List<CommonWebsiteData>? websiteList,
     List<SearchHotKeyData>? keyList,
-    ValueChanged<String>? itemTap
+    ValueChanged<String>? itemTap,
+    WebsiteClick? websiteClick,
   }) {
     return Container(
       margin: EdgeInsets.only(top: 20.h),
@@ -122,11 +139,11 @@ class _HotKeyPageState extends State<HotKeyPage> {
     );
   }
 
-  Widget _item(String? name, {String? link, ValueChanged<String>? itemTap}) {
+  Widget _item(String? name, {String? link, ValueChanged<String>? itemTap, WebsiteClick? websiteClick}) {
     return GestureDetector(
       onTap: () {
         if (link != null) {
-          itemTap?.call(link);
+          websiteClick?.call(name ?? "", link);
         } else {
           itemTap?.call(name ?? "");
         }

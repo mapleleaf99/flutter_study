@@ -1,6 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+///标题文本15号
+TextStyle titleTextStyle15 = TextStyle(color: Colors.black, fontSize: 15.sp);
+
+Text normalText(String? text) {
+  return Text(text ?? "", style: titleTextStyle15,);
+}
+
 ///通用输入框
 Widget commonInput({String? labelText, ValueChanged<String>? onChanged, TextEditingController? controller, bool? obscureText}) {
   return TextField(

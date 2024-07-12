@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_demo/repository/api.dart';
 import 'package:flutter_demo/repository/datas/home_banner_data.dart';
 import 'package:flutter_demo/repository/datas/home_list_data.dart';
@@ -66,5 +66,14 @@ class HomeViewModel extends ChangeNotifier {
     }
     List<HomeListItemData>? list = await Api.instance.getHomeTopList();
     return list;
+  }
+
+  ///收藏、取消收藏
+  Future collectOrNoCollect(String id, int index, bool isCollect) async {
+    bool? success = await Api.instance.collect(id, isCollect);
+    if (success == true) {
+      listData?[index].collect = isCollect;
+      notifyListeners();
+    }
   }
 }

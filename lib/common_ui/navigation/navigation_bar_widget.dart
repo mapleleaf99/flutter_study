@@ -21,8 +21,8 @@ class NavigationBarWidget extends StatefulWidget {
   int? currentIndex;
 
   NavigationBarWidget({super.key, required this.pages, required this.labels, required this.icons, required this.activeIcons, this.onTabChange, this.currentIndex, }) {
-    if (pages.length != labels.length &&
-        pages.length != icons.length &&
+    if (pages.length != labels.length ||
+        pages.length != icons.length ||
         pages.length != activeIcons.length) {
       throw Exception("数组长度必须保持一致");
     }
@@ -42,21 +42,30 @@ class _NavigationBarWidgetState extends State<NavigationBarWidget> {
             children: widget.pages,
           ),
         ),
-        bottomNavigationBar: Theme(
-          child: BottomNavigationBar(
-            items: _barItemList(),
-            currentIndex: widget.currentIndex ?? 0,
-            type: BottomNavigationBarType.fixed,
-            selectedLabelStyle: TextStyle(fontSize: 14.sp, color: Colors.black),
-            unselectedLabelStyle: TextStyle(fontSize: 12.sp, color: Colors.blueGrey),
-            onTap: (value) {
-              setState(() {
-                widget.currentIndex = value;
-                widget.onTabChange?.call(value);
-              });
-            },
-          ),
-          data: Theme.of(context).copyWith(splashColor: Colors.transparent, highlightColor: Colors.transparent,),
+        bottomNavigationBar: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              height: 0.5.w,
+              color: Colors.grey,
+            ),
+            Theme(
+              child: BottomNavigationBar(
+                items: _barItemList(),
+                currentIndex: widget.currentIndex ?? 0,
+                type: BottomNavigationBarType.fixed,
+                selectedLabelStyle: TextStyle(fontSize: 14.sp, color: Colors.black),
+                unselectedLabelStyle: TextStyle(fontSize: 12.sp, color: Colors.blueGrey),
+                onTap: (value) {
+                  setState(() {
+                    widget.currentIndex = value;
+                    widget.onTabChange?.call(value);
+                  });
+                },
+              ),
+              data: Theme.of(context).copyWith(splashColor: Colors.transparent, highlightColor: Colors.transparent,),
+            )
+          ],
         )
     );
   }

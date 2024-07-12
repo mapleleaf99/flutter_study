@@ -52,7 +52,13 @@ class _TabPageState extends State<TabPage> {
   }
   @override
   Widget build(BuildContext context) {
-    return NavigationBarWidget(pages: pages, labels: labels, icons: icons, activeIcons: activeIcons, currentIndex: 0, onTabChange: (index) {
+    return NavigationBarWidget(
+      pages: pages,
+      labels: labels,
+      icons: icons,
+      activeIcons: activeIcons,
+      currentIndex: 0,
+      onTabChange: (index) {
 
     },);
   }

@@ -1,8 +1,12 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_demo/common_ui/dialog/dialog_factory.dart';
+import 'package:flutter_demo/pages/about_us_page/about_us_page.dart';
 import 'package:flutter_demo/pages/auth/login_page.dart';
+import 'package:flutter_demo/pages/my_collects/my_collects_page.dart';
+import 'package:flutter_demo/pages/personal/personal_vm.dart';
 import 'package:flutter_demo/route/route_untils.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provider/provider.dart';
 
 class PersonalPage extends StatefulWidget {
   const PersonalPage({super.key});
@@ -12,19 +16,59 @@ class PersonalPage extends StatefulWidget {
 }
 
 class _PersonalPageState extends State<PersonalPage> {
+  PersonalViewModel viewModel = PersonalViewModel();
+
+  @override
+  void initState() {
+    super.initState();
+
+    viewModel.initData();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: Column(
-          children: [
-            _header(() {
-              RouteUntils.push(context, LoginPage());
-            }),
-            _settingsItem("我的收藏", () {}),
-            _settingsItem("检查更新", () {}),
-            _settingsItem("关于我们", () {}),
-          ],
+    return ChangeNotifierProvider(
+      create: (context) {
+        return viewModel;
+      },
+      child: Scaffold(
+        body: SafeArea(
+          child: Column(
+            children: [
+              _header(() {
+                if (viewModel.shouldLogin) {
+                  RouteUntils.push(context, LoginPage());
+                }
+              }),
+              _settingsItem("我的收藏", () {
+                RouteUntils.push(context, MyCollectsPage());
+              }),
+              _settingsItem("检查更新", () {
+                DialogFactory.instance.showNeedUpdateDialog(
+                    context: context,
+                    dismissClick: () {
+
+                    },
+                    confirmClick: () {
+
+                    });
+              }),
+              _settingsItem("关于我们", () {
+                RouteUntils.push(context, AboutUsPage());
+              }),
+              Consumer<PersonalViewModel>(builder: (context, vm, chlid) {
+                if (vm.shouldLogin) {
+                  return SizedBox();
+                } else {
+                  return _settingsItem("退出登录", () {
+                    viewModel.logout((value) {
+                      RouteUntils.pushAndRemoveUntil(context, LoginPage());
+                    });
+                  });
+                }
+              }),
+            ],
+          ),
         ),
       ),
     );
@@ -70,10 +114,14 @@ class _PersonalPageState extends State<PersonalPage> {
             ),
           ),
           SizedBox(height: 6,),
-          GestureDetector(
-              onTap: onTap,
-              child: Text("未登录", style: TextStyle(color: Colors.white, fontSize: 13.sp),)
-          )
+          Consumer<PersonalViewModel>(
+            builder: (context, vm, chlid) {
+              return GestureDetector(
+                  onTap: onTap,
+                  child: Text(vm.username ?? "", style: TextStyle(color: Colors.white, fontSize: 13.sp),)
+              );
+            }
+            )
         ],
       ),
     );

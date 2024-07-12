@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_demo/common_ui/loading.dart';
 import 'package:flutter_demo/common_ui/smart_refresh/smart_refresh_widget.dart';
+import 'package:flutter_demo/common_ui/web/webview_page.dart';
+import 'package:flutter_demo/common_ui/web/webview_widget.dart';
 import 'package:flutter_demo/repository/datas/home_list_data.dart';
 import 'package:flutter_demo/pages/home/home_vm.dart';
 import 'package:flutter_demo/route/route_untils.dart';
-import 'package:flutter_demo/route/routes.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_swiper_view/flutter_swiper_view.dart';
 import 'package:provider/provider.dart';
@@ -25,12 +27,14 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
 
+    Loading.showLoading();
     viewModel.getBanner();
-    viewModel.initHomeListData(false);
+    refreshOrLoad(false);
   }
 
   void refreshOrLoad(bool loadMore) {
     viewModel.initHomeListData(loadMore, callback: (loadMore) {
+      Loading.dismissAll();
       if (loadMore) {
         refreshController.loadComplete();
       } else {
@@ -76,7 +80,7 @@ class _HomePageState extends State<HomePage> {
     print("_homeListView 刷新");
     return Consumer<HomeViewModel>(builder: (context, vm, child) {
       return ListView.builder(itemBuilder: (context, index) {
-        return _listItemView(vm.listData?[index]);
+        return _listItemView(vm.listData?[index], index);
       },
         itemCount: vm.listData?.length ?? 0,
         shrinkWrap: true,
@@ -85,7 +89,7 @@ class _HomePageState extends State<HomePage> {
     });
   }
   //列表
-  Widget _listItemView(HomeListItemData? item) {
+  Widget _listItemView(HomeListItemData? item, int index) {
     var name;
     if (item?.author?.isNotEmpty == true) {
       name = item?.author ?? "";
@@ -94,10 +98,12 @@ class _HomePageState extends State<HomePage> {
     }
     return GestureDetector(
       onTap: () {
-
-        RouteUntils.pushForNamed(context, RoutePath.webViewPage, arguments: {
-          "name": "使用路由传值"
-        });
+        ///跳转网页
+        RouteUntils.push(context, WebViewPage(
+            loadResource: item?.link ?? "",
+            webViewType: WebViewType.URL,
+            showTitle: true,
+            title: item?.title,));
       },
       child: Container(
         padding: EdgeInsets.only(top: 15.h, bottom: 15.h, left: 10.w, right: 10.w),
@@ -136,7 +142,15 @@ class _HomePageState extends State<HomePage> {
               children: [
                 Text(item?.chapterName ?? "", style: TextStyle(fontSize: 12.sp, color: Colors.green),),
                 Expanded(child: SizedBox()),
-                Icon(Icons.favorite),
+                GestureDetector(
+                  onTap: () {
+                    viewModel.collectOrNoCollect("${item?.id}", index, !(item?.collect ?? false));
+                  },
+                    child: Image.asset(
+                      item?.collect == true ? "assets/images/img_collect.png" : "assets/images/img_collect_grey.png",
+                      width: 30.r,
+                      height: 30.r,)
+                ),
               ],
             ),
           ],
@@ -159,9 +173,19 @@ class _HomePageState extends State<HomePage> {
           control: const SwiperControl(),
           itemCount: vm.bannerList?.length ?? 0,
           itemBuilder: (context, index) {
-            return Container(
-              height: 150.h,
-              child: Image.network(vm.bannerList?[index]?.imagePath ?? "", fit: BoxFit.fill,),
+            return GestureDetector(
+              onTap: () {
+                ///跳转网页
+                RouteUntils.push(context, WebViewPage(
+                  loadResource: vm.bannerList?[index]?.url ?? "",
+                  webViewType: WebViewType.URL,
+                  showTitle: true,
+                  title: vm.bannerList?[index]?.title,));
+              },
+              child: Container(
+                height: 150.h,
+                child: Image.network(vm.bannerList?[index]?.imagePath ?? "", fit: BoxFit.fill,),
+              ),
             );
           },
         ),
