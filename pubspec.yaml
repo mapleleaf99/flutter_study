@@ -40,7 +40,8 @@ dependencies:
   pull_to_refresh: ^2.0.0
   #webview:基于原生webview封装的
   flutter_inappwebview: ^5.8.0
-
+  #语言国际化
+  flutter_localization: ^0.2.0
 
 dev_dependencies:
   flutter_test:
@@ -55,5 +56,3 @@ flutter:
 
   assets:
     - assets/images/
-  #   - images/a_dot_burr.jpeg
-  #   - images/a_dot_ham.jpeg

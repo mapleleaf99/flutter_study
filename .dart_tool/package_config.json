@@ -110,6 +110,18 @@
       "languageVersion": "3.1"
     },
     {
+      "name": "flutter_localization",
+      "rootUri": "file:///Users/yunan/.pub-cache/hosted/pub.dev/flutter_localization-0.2.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "flutter_localizations",
+      "rootUri": "file:///Users/yunan/Flutter/flutter/packages/flutter_localizations",
+      "packageUri": "lib/",
+      "languageVersion": "3.2"
+    },
+    {
       "name": "flutter_screenutil",
       "rootUri": "file:///Users/yunan/.pub-cache/hosted/pub.dev/flutter_screenutil-5.9.3",
       "packageUri": "lib/",
@@ -150,6 +162,12 @@
       "rootUri": "file:///Users/yunan/.pub-cache/hosted/pub.dev/http_parser-4.0.2",
       "packageUri": "lib/",
       "languageVersion": "2.12"
+    },
+    {
+      "name": "intl",
+      "rootUri": "file:///Users/yunan/.pub-cache/hosted/pub.dev/intl-0.19.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
     },
     {
       "name": "leak_tracker",
@@ -512,7 +530,7 @@
       "languageVersion": "3.4"
     }
   ],
-  "generated": "2024-07-12T02:58:24.884099Z",
+  "generated": "2024-07-25T09:14:57.782258Z",
   "generator": "pub",
   "generatorVersion": "3.4.3",
   "flutterRoot": "file:///Users/yunan/Flutter/flutter",

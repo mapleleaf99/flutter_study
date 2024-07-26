@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_demo/AppLocale.dart';
 import 'package:flutter_demo/common_ui/loading.dart';
 import 'package:flutter_demo/common_ui/smart_refresh/smart_refresh_widget.dart';
 import 'package:flutter_demo/common_ui/web/webview_page.dart';
@@ -132,7 +133,7 @@ class _HomePageState extends State<HomePage> {
                 Padding(padding: EdgeInsets.only(right: 5.w),
                   child: Text(item?.niceShareDate ?? "", style: TextStyle(color: Colors.black, fontSize: 12.sp),),
                 ),
-                (item?.type?.toInt() == 1) ? Text("置顶", style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),) : SizedBox()
+                (item?.type?.toInt() == 1) ? Text(Applocale.getLocalText(context, Applocale.title), style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),) : SizedBox()
               ],
             ),
             SizedBox(height: 5.h,),
@@ -144,6 +145,7 @@ class _HomePageState extends State<HomePage> {
                 Expanded(child: SizedBox()),
                 GestureDetector(
                   onTap: () {
+                    Applocale.changeLange("en");
                     viewModel.collectOrNoCollect("${item?.id}", index, !(item?.collect ?? false));
                   },
                     child: Image.asset(
